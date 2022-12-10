@@ -1,46 +1,89 @@
-# Getting Started with Create React App
+# База фильмов 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Реализовать страницу для удобного отображения большой базы фильмов, используя популярный вебфреймворк: Vue, React или Angular.
 
-## Available Scripts
+Список фильмов в виде таблицы должен удовлетворять следующим требованиям:
 
-In the project directory, you can run:
+1. Возможность сортировки и фильтрации по полям.
+2. Возможность отображения и скрытия необходимых полей. Для отображения должны быть
+доступны все поля из поля "data" в ответе.
+3. В качестве критериев отбора для вывода списка как минимум должно быть отдельное текстовое
+поле для поиска фильмов по фразе (для этого можно использовать свойство "search" в запросе).
+4. Возможность постраничного отображения данных (пагинация), а так же возможность
+отображения всей базы фильмов на одной странице.
 
-### `npm start`
+Учесть, что объём принимаемых данных может быть до 44 Мб. Найти способ избежать подвисания
+страницы при отображении полного списка.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Запрос данных доступен через следующее API:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Запрос:
 
-### `npm test`
+```javascript
+Uri: http://185.185.69.80:8082/list
+Method: POST
+Content-Type: application/json
+Data: {
+  "page": номер страницы, начиная счёт с 0, по умолчанию 0,
+  "page_size": число записей на странице,
+  "sort_field": по какому полю сортировать: "imdb_id", "budget", "original_language", "popularity",
+"release_date", "revenue", "runtime", "status", "vote_average" или "vote_count",
+  "sort_order": направление сортировки: "asc" или "desc", по умолчанию "asc",
+  "imdb_id": "ID фильма для поиска только одного фильма",
+  "ids": массив чисел ID из базы,
+  "search": "строка поиска по фразе",
+  "adult": фильм для взрослых true/false,
+  "budget_min": целое число,
+  "budget_max": целое число,
+  "genres": массив строк с жанрами фильмов,
+  "original_language": строка с названием языка, например "fr",
+  "popularity_min": число с плавающей точкой,
+  "popularity_max": число с плавающей точкой,
+  "release_date_min": дата в формате YYYY-MM-DD,
+  "release_date_max": дата в формате YYYY-MM-DD,
+  "revenue_min": целое число,
+  "revenue_max": целое число,
+  "runtime_min": число с плавающей точкой,
+  "runtime_max": число с плавающей точкой,
+  "spoken_languages": массив строк с названиями языков,
+  "status": "статус выхода фильма",
+  "vote_average_min": число с плавающей точкой,
+  "vote_average_max": число с плавающей точкой,
+  "vote_count_min": целое число,
+  "vote_count_max": целое число
+}
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### Ответ:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```javascript
+{
+  "ok": true,
+  "data_size": количество фильмов после фильтрации,
+  "data": [ {
+    "id": ID фильма из базы,
+    "adult": фильм для взрослых true/false,
+    "belongs_to_collection": данные о принадлежности фильма к коллекции фильмов,
+    "budget": бюджет фильма,
+    "genres": список жанров фильма,
+    "homepage": "страница фильма",
+    "imdb_id": "ID фильма в базе IMDB",
+    "original_language": "язык фильма",
+    "original_title": "заголовок на родном языке",
+    "overview": "краткое описание",
+    "popularity": популярность фильма,
+    "production_companies": список с информацией по киностудиям,
+    "production_countries": список с информацией по странам,
+    "release_date": "дата выхода",
+    "revenue": доходы,
+    "runtime": продолжительность,
+    "spoken_languages": список с языками, представленными в фильме,
+    "status": "статус выхода фильма",
+    "tagline": "изречение",
+    "title": "заголовок",
+    "vote_average": средний рейтинг,
+    "vote_count": количество голосов рейтинга
+  }, ... ]
+}
+```
