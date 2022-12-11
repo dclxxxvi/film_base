@@ -1,10 +1,13 @@
 import React from 'react';
+import FilmPage from "./FilmPage";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 function App() {
     return (
-        <div className="App">
-
-        </div>
+        <Provider store={ store }>
+            <FilmPage/>
+        </Provider>
     );
 }
 
